@@ -3,6 +3,7 @@ import { MovieCard } from "../moviecard-view/moviecard-view";
 import { MovieView } from "../movie-view/movie-view";
 
 export const MainView = () => {
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const [movies, setMovies] = useState([
     {
       id: "664fa4abef33997041cfb15e",
@@ -20,5 +21,15 @@ export const MainView = () => {
     },
   ]);
 
-  return <div>Main View Component</div>;
+  if (selectedMovie) {
+    return <MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />;
+  }
+
+  return (
+    <div>
+      {movies.map((movie) => (
+        <MovieCard key={movie.id} onMovieClick={setSelectedMovie} movie={movie} />
+      ))}
+    </div>
+  );
 };
