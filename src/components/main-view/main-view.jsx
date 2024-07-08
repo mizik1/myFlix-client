@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { MovieCard } from "../moviecard-view/moviecard-view";
 import { MovieView } from "../movie-view/movie-view";
 
@@ -9,9 +9,7 @@ export const MainView = () => {
       Title: "Lost in Translation",
       Description:
         "A faded movie star and a lonely neglected young woman form an unlikely bond after crossing paths in the amazing city of Tokyo.",
-
       Genre: "Comedy",
-      Director: Object,
       Name: "Sofia Coppola",
       Bio: "Sofia Carmina Coppola (/ˈkoʊpələ/ KOH-pəl-ə[1] Italian pronunciation: [soˈfiːa karˈmiːna ˈkoppola]; born May 14, 1971) is an American film director, screenwriter, producer, and former actress.",
       BirthDate: "May 14, 1971",
@@ -21,4 +19,12 @@ export const MainView = () => {
       movieid: 6,
     },
   ]);
+
+  return (
+    <div>
+      {movies.map((movie) => (
+        <MovieCard key={movie.id} movie={movie} />
+      ))}
+    </div>
+  );
 };
