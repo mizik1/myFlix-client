@@ -1,11 +1,9 @@
 import React from "react";
 
-export const MovieCard = ({ movie }) => {
+export const MovieCard = ({ movie, onMovieClick }) => {
   return (
-    <div>
-      <img src={movie.imageURL} alt={movie.Title} />
+    <div onClick={() => onMovieClick(movie)}>
       <h2>{movie.Title}</h2>
-      <p>{movie.Description}</p>
     </div>
   );
 };

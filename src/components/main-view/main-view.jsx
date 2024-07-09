@@ -4,7 +4,7 @@ import { MovieView } from "../movie-view/movie-view";
 
 export const MainView = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [movies, setMovies] = useState([
+  const [movies] = useState([
     {
       id: "664fa4abef33997041cfb15e",
       Title: "Lost in Translation",
@@ -157,3 +157,5 @@ export const MainView = () => {
     </div>
   );
 };
+
+// This uses 'selectedMovie' to determine how to show the list of movies. If a selected movie is not 'null' then the 'MovieView' is rendered.
