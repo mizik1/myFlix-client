@@ -30,5 +30,3 @@ export const MainView = () => {
     </div>
   );
 };
-
-// This uses 'selectedMovie' to determine how to show the list of movies. If a selected movie is not 'null' then the 'MovieView' is rendered.
