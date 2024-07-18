@@ -25,7 +25,7 @@ export const MainView = () => {
   return (
     <div>
       {movies.map((movie) => (
-        <MovieCard key={movie.id} onMovieClick={setSelectedMovie} movie={movie} />
+        <MovieCard key={movie._id} onMovieClick={setSelectedMovie} movie={movie} />
       ))}
     </div>
   );
