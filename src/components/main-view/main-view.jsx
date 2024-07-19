@@ -6,6 +6,7 @@ export const MainView = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [movies, setMovies] = useState([]); // empty movie array
 
+  // This retrieves the movies from the movie-api
   useEffect(() => {
     const fetchMovies = async () => {
       fetch("https://great-movies-flix-ecc6317feb54.herokuapp.com/movies")
