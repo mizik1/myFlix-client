@@ -14,16 +14,20 @@ export const LoginView = ({ onLoggedIn }) => {
     };
 
     // Sends post request to my API using fetch then response is parsed to JSON with token
-    fetch("https://great-movies-flix-ecc6317feb54.herokuapp.com/", {
+    fetch("https://great-movies-flix-ecc6317feb54.herokuapp.com/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     })
-      .then((response) => response.json()) // Corrected to .json()
+      .then((response) => response.json())
       .then((data) => {
         if (data.user) {
+          // Store user and token in localStorage
+          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("token", data.token);
+
           // Call the onLoggedIn function passed on as a prop
           onLoggedIn(data.user, data.token);
         } else {
