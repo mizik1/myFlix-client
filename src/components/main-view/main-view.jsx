@@ -39,20 +39,26 @@ export const MainView = () => {
 
   if (!user) {
     return isSigningUp ? (
-      <SignupView
-        onSignedUp={(user, token) => {
-          setUser(user);
-          setToken(token);
-          setIsSigningUp(false);
-        }}
-      />
+      <>
+        <SignupView
+          onSignedUp={(user, token) => {
+            setUser(user);
+            setToken(token);
+            setIsSigningUp(false);
+          }}
+        />
+        <button onClick={() => setIsSigningUp(false)}>Already have an account? Log in</button>
+      </>
     ) : (
-      <LoginView
-        onLoggedIn={(user, token) => {
-          setUser(user);
-          setToken(token);
-        }}
-      />
+      <>
+        <LoginView
+          onLoggedIn={(user, token) => {
+            setUser(user);
+            setToken(token);
+          }}
+        />
+        <button onClick={() => setIsSigningUp(true)}>Don't have an account? Sign up</button>
+      </>
     );
   }
 
