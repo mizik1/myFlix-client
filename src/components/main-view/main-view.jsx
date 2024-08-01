@@ -30,6 +30,13 @@ export const MainView = () => {
     }
   }, [token]);
 
+  const handleLogout = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  };
+
   if (!user) {
     return isSigningUp ? (
       <SignupView
@@ -55,6 +62,7 @@ export const MainView = () => {
 
   return (
     <div>
+      <button onClick={handleLogout}>Logout</button>
       {movies.map((movie) => (
         <MovieCard key={movie._id} onMovieClick={setSelectedMovie} movie={movie} />
       ))}
