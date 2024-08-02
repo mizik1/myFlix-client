@@ -51,21 +51,23 @@ export const SignupView = ({ onSignedUp }) => {
       {error && <p className="error">{error}</p>}
       <label>
         Name:
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required aria-label="Name" />
       </label>
       <label>
         Password:
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required aria-label="Password" />
       </label>
       <label>
         Email:
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required aria-label="Email" />
       </label>
       <label>
         Birthday:
-        <input type="date" value={birthday} onChange={(e) => setBirthday(e.target.value)} required />
+        <input type="date" value={birthday} onChange={(e) => setBirthday(e.target.value)} required aria-label="Birthday" />
       </label>
-      <button type="submit">Submit</button>
+      <button type="submit" aria-label="Submit your signup information">
+        Submit
+      </button>
     </form>
   );
 };
