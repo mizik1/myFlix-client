@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 export const SignupView = ({ onSignedUp }) => {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [birthday, setBirthday] = useState("");
@@ -11,7 +13,7 @@ export const SignupView = ({ onSignedUp }) => {
     event.preventDefault();
 
     const data = {
-      Username: name,
+      Username: username,
       Password: password,
       Email: email,
       Birthday: birthday,
@@ -28,15 +30,12 @@ export const SignupView = ({ onSignedUp }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.user) {
-          // Store user and token in localStorage
-          localStorage.setItem("user", JSON.stringify(data.user));
-          localStorage.setItem("token", data.token);
-
           // Call the onSignedUp function passed on as a prop
-          onSignedUp(data.user, data.token);
+          onSignedUp();
+          alert("Thank you for signing up!");
         } else {
           // Handle signup failure
-          setError("Signup failed. Please check your details.");
+          setError("Sorry your signup failed. Please check your details.");
         }
       })
       // catch any errors that happened during the fetch request
@@ -47,27 +46,27 @@ export const SignupView = ({ onSignedUp }) => {
 
   // handle form submission. Username input and Password input
   return (
-    <form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit}>
       {error && <p className="error">{error}</p>}
-      <label>
-        Name:
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required aria-label="Name" />
-      </label>
-      <label>
-        Password:
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required aria-label="Password" />
-      </label>
-      <label>
-        Email:
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required aria-label="Email" />
-      </label>
-      <label>
-        Birthday:
-        <input type="date" value={birthday} onChange={(e) => setBirthday(e.target.value)} required aria-label="Birthday" />
-      </label>
-      <button type="submit" aria-label="Submit your signup information">
+      <Form.Group controlId="formUsername">
+        <Form.Label>Username</Form.Label>
+        <Form.Control type="text" value={username} onChange={(e) => setUsername(e.target.value)} required minLength="3" />
+      </Form.Group>
+      <Form.Group controlId="formPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+      </Form.Group>
+      <Form.Group controlId="formEmail">
+        <Form.Label>Email</Form.Label>
+        <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      </Form.Group>
+      <Form.Group controlId="formBirthday">
+        <Form.Label>Birthday</Form.Label>
+        <Form.Control type="date" value={birthday} onChange={(e) => setBirthday(e.target.value)} required />
+      </Form.Group>
+      <Button variant="primary" type="submit">
         Submit
-      </button>
-    </form>
+      </Button>
+    </Form>
   );
 };

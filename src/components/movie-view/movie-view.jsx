@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "react-bootstrap/Button";
 
 export const MovieView = ({ movie, onBackClick }) => {
   return (
@@ -9,9 +10,9 @@ export const MovieView = ({ movie, onBackClick }) => {
       <p>Genre: {movie.Genre}</p>
       <p>Director: {movie.Name}</p>
       <p>{movie.Bio}</p>
-      <button onClick={onBackClick}>Back</button>
+      <Button variant="secondary" onClick={onBackClick}>
+        Back
+      </Button>
     </div>
   );
 };
-
-// This piece sets the order of how the chosen movie will be diplayed.

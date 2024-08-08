@@ -1,36 +1,26 @@
-import React from "react";
 import PropTypes from "prop-types";
+import { Card, Button } from "react-bootstrap";
 
 export const MovieCard = ({ movie, onMovieClick }) => {
+  const imageSrc = movie.imageURL ? movie.imageURL : "path/to/placeholder.jpg";
+
   return (
-    <div
-      onClick={() => {
-        onMovieClick(movie);
-      }}
-    >
-      <img src={movie.imageURL} alt={movie.Title} />
-      <h2>{movie.Title}</h2>
-      <p>{movie.Description}</p>
-    </div>
+    <Card className="h-100">
+      <Card.Img variant="top" src={imageSrc} style={{ height: "200px", objectFit: "cover" }} alt={movie.Title} />
+      <Card.Body className="d-flex flex-column">
+        <Card.Title>{movie.Title}</Card.Title>
+        <Button variant="primary" onClick={() => onMovieClick(movie)} className="mt-auto">
+          Open
+        </Button>
+      </Card.Body>
+    </Card>
   );
 };
 
-// Prop types
 MovieCard.propTypes = {
   movie: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
     Title: PropTypes.string.isRequired,
-    Description: PropTypes.string.isRequired,
-    Genre: PropTypes.string.isRequired,
-    Director: PropTypes.shape({
-      Name: PropTypes.string.isRequired,
-      Bio: PropTypes.string.isRequired,
-      BirthDate: PropTypes.string, //optional birthdate
-      DeathDate: PropTypes.string, // optional deathdate
-    }).isRequired,
-    imageURL: PropTypes.string.isRequired,
-    Featured: PropTypes.bool.isRequired,
-    movieid: PropTypes.number.isRequired,
+    imageURL: PropTypes.string, // Make this optional
   }).isRequired,
   onMovieClick: PropTypes.func.isRequired,
 };
