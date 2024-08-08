@@ -11,11 +11,7 @@ export const MovieCard = ({ movie, onMovieClick }) => {
       <Card.Img
         variant="top"
         src={imageSrc}
-        style={{
-          height: "200px", // Set a fixed height for the image
-          objectFit: "contain", // Ensure the image is fully visible inside the fixed height
-          objectPosition: "center", // Center the image within the container
-        }}
+        className="object-fit-contain" // Use the custom CSS class
         alt={movie.Title}
       />
       <Card.Body className="d-flex flex-column">

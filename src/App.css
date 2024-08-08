@@ -28,6 +28,12 @@
   color: #61dafb;
 }
 
+.object-fit-contain {
+  height: 250px; /* Set a fixed height for the image */
+  object-fit: contain; /* Ensure the image is fully visible inside the fixed height */
+  object-position: center; /* Center the image within the container */
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
