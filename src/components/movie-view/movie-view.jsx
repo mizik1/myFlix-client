@@ -8,8 +8,8 @@ export const MovieView = ({ movie, onBackClick }) => {
       <img src={movie.imageURL} alt={movie.Title} />
       <p>{movie.Description}</p>
       <p>Genre: {movie.Genre}</p>
-      <p>Director: {movie.Name}</p>
-      <p>{movie.Bio}</p>
+      <p>Director: {movie.Director.Name}</p>
+      <p>{movie.Director.Bio}</p>
       <Button variant="secondary" onClick={onBackClick}>
         Back
       </Button>
