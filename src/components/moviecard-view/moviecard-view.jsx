@@ -1,24 +1,18 @@
 import PropTypes from "prop-types";
-import { Card, Button } from "react-bootstrap";
+import { Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-export const MovieCard = ({ movie, onMovieClick }) => {
-  // Check if movie.imageURL exists, if not use a placeholder image
+export const MovieCard = ({ movie }) => {
   const imageSrc = movie.imageURL ? movie.imageURL : "path/to/placeholder.jpg";
 
   return (
     <Card className="h-100">
-      {/* Adjusted the style of Card.Img to ensure the image is fully visible */}
-      <Card.Img
-        variant="top"
-        src={imageSrc}
-        className="object-fit-contain" // Use the custom CSS class
-        alt={movie.Title}
-      />
+      <Card.Img variant="top" src={imageSrc} className="object-fit-contain" alt={movie.Title} />
       <Card.Body className="d-flex flex-column">
         <Card.Title>{movie.Title}</Card.Title>
-        <Button variant="primary" onClick={() => onMovieClick(movie)} className="mt-auto">
+        <Link to={`/movies/${movie._id}`} className="mt-auto btn btn-primary">
           Open
-        </Button>
+        </Link>
       </Card.Body>
     </Card>
   );
@@ -27,7 +21,6 @@ export const MovieCard = ({ movie, onMovieClick }) => {
 MovieCard.propTypes = {
   movie: PropTypes.shape({
     Title: PropTypes.string.isRequired,
-    imageURL: PropTypes.string, // Make this optional
+    imageURL: PropTypes.string, // Optional image
   }).isRequired,
-  onMovieClick: PropTypes.func.isRequired,
 };

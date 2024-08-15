@@ -1,7 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
-export const MovieView = ({ movie, onBackClick }) => {
+export const MovieView = ({ movie, onAddFavorite }) => {
   return (
     <div>
       <h1>{movie.Title}</h1>
@@ -9,9 +10,19 @@ export const MovieView = ({ movie, onBackClick }) => {
       <p>{movie.Description}</p>
       <p>Genre: {movie.Genre}</p>
       <p>Director: {movie.Director.Name}</p>
-      <p>{movie.Director.Bio}</p>
-      <Button variant="warning" onClick={onBackClick}>
+      <p>Director's Bio: {movie.Director.Bio}</p>
+      <p>Director's Birth Date: {movie.Director.BirthDate}</p>
+      <p>Director's Death Date: {movie.Director.DeathDate ? movie.Director.DeathDate : "N/A"}</p>
+
+      <Link to="/movies" className="btn btn-warning">
         Back
+      </Link>
+      <Button
+        variant="primary"
+        onClick={() => onAddFavorite(movie._id)} // Call the passed function with the movie's ID
+        className="ms-3"
+      >
+        Add to favorites
       </Button>
     </div>
   );
