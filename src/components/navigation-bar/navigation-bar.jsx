@@ -20,6 +20,10 @@ export const NavigationBar = () => {
           <Nav.Link as={Link} to="/login">
             Login
           </Nav.Link>
+          <Nav.Link as={Link} to="/logoff">
+            Logoff
+          </Nav.Link>{" "}
+          {/* Logoff link */}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

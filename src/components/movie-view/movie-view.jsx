@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 
 export const MovieView = ({ movie, onAddFavorite }) => {
+  // Check if the movie object exists before rendering the movie details
+  if (!movie) {
+    return <div>Loading...</div>; // Show a loading message or spinner if the movie data is not yet available
+  }
+
   return (
     <div>
       <h1>{movie.Title}</h1>
@@ -17,11 +22,7 @@ export const MovieView = ({ movie, onAddFavorite }) => {
       <Link to="/movies" className="btn btn-warning">
         Back
       </Link>
-      <Button
-        variant="primary"
-        onClick={() => onAddFavorite(movie._id)} // Call the passed function with the movie's ID
-        className="ms-3"
-      >
+      <Button variant="primary" onClick={() => onAddFavorite(movie._id)} className="ms-3">
         Add to favorites
       </Button>
     </div>

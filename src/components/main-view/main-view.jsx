@@ -5,6 +5,7 @@ import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
 import { ProfileView } from "../profile-view/profile-view";
+import { LogoffView } from "../logoff-view/logoff-view"; // Import LogoffView
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -22,15 +23,30 @@ export const MainView = () => {
       fetch("https://great-movies-flix-ecc6317feb54.herokuapp.com/movies", {
         headers: { Authorization: `Bearer ${token}` },
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch movies");
+          }
+          return response.json();
+        })
         .then((data) => setMovies(data))
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          console.error("Error fetching movies:", error);
+        });
     }
   }, [token]);
 
+  // Logoff handler
+  const handleLogoff = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  };
+
   return (
     <Router>
-      <NavigationBar /> {/* Add the navigation bar here */}
+      <NavigationBar />
       <Container>
         <Routes>
           <Route path="/" element={user ? <Navigate to="/movies" /> : <Navigate to="/login" />} />
@@ -82,6 +98,9 @@ export const MainView = () => {
           />
           <Route path="/movies/:movieId" element={user ? <MovieView /> : <Navigate to="/login" />} />
           <Route path="/profile" element={user ? <ProfileView user={user} /> : <Navigate to="/login" />} />
+
+          {/* Logoff Route */}
+          <Route path="/logoff" element={<LogoffView onLogoff={handleLogoff} />} />
         </Routes>
       </Container>
     </Router>
