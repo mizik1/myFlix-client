@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 export const LoginView = ({ onLoggedIn }) => {
   const [username, setUsername] = useState("");
@@ -15,7 +18,6 @@ export const LoginView = ({ onLoggedIn }) => {
       Password: password,
     };
 
-    // Sends post request to my API using fetch then response is parsed to JSON with token
     fetch("https://great-movies-flix-ecc6317feb54.herokuapp.com/login", {
       method: "POST",
       headers: {
@@ -26,38 +28,43 @@ export const LoginView = ({ onLoggedIn }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.user) {
-          // Store user and token in localStorage
           localStorage.setItem("user", JSON.stringify(data.user));
           localStorage.setItem("token", data.token);
-
-          // Call the onLoggedIn function passed on as a prop
           onLoggedIn(data.user, data.token);
         } else {
-          // Handle login failure
           setError("Login failed. Please check your credentials.");
         }
       })
-      // catch any errors that happened during the fetch request
-      .catch((error) => {
+      .catch(() => {
         setError("An error occurred. Please try again later.");
       });
   };
 
-  // handle form submission. Username input and Password input
   return (
-    <Form onSubmit={handleSubmit}>
-      {error && <p className="error">{error}</p>}
-      <Form.Group controlId="formUsername">
-        <Form.Label>Username</Form.Label>
-        <Form.Control type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
-      </Form.Group>
-      <Form.Group controlId="formPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+    <Row className="justify-content-center mt-5">
+      <Col xs={12} sm={8} md={6} lg={4}>
+        <Form onSubmit={handleSubmit}>
+          {error && <p className="error">{error}</p>}
+          <Form.Group controlId="formUsername">
+            <Form.Label>Username</Form.Label>
+            <Form.Control type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          </Form.Group>
+          <Form.Group controlId="formPassword">
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Login
+          </Button>
+
+          {/* Sign Up Button */}
+          <div className="mt-3">
+            <Link to="/signup">
+              <Button variant="secondary">Sign Up</Button>
+            </Link>
+          </div>
+        </Form>
+      </Col>
+    </Row>
   );
 };

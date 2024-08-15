@@ -80,6 +80,7 @@ export const MainView = () => {
               )
             }
           />
+
           <Route
             path="/movies"
             element={
