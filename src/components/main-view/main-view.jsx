@@ -44,6 +44,11 @@ export const MainView = () => {
     localStorage.removeItem("token");
   };
 
+  // Add to favorites handler
+  const handleAddFavorite = (movieId) => {
+    // Add logic to add the movie to favorites
+  };
+
   return (
     <Router>
       <NavigationBar />
@@ -97,7 +102,11 @@ export const MainView = () => {
               )
             }
           />
-          <Route path="/movies/:movieId" element={user ? <MovieView /> : <Navigate to="/login" />} />
+          {/* Updated Route */}
+          <Route
+            path="/movies/:movieId"
+            element={user ? <MovieView movies={movies} onAddFavorite={handleAddFavorite} /> : <Navigate to="/login" />}
+          />
           <Route path="/profile" element={user ? <ProfileView user={user} /> : <Navigate to="/login" />} />
 
           {/* Logoff Route */}

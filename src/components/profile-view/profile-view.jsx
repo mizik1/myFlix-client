@@ -19,10 +19,10 @@ export const ProfileView = ({ user, favoriteMovie }) => {
         <Col md={8}>
           <h2>Profile</h2>
           <p>
-            <strong>User Name:</strong> {user.name}
+            <strong>User Name:</strong> {user.Username}
           </p>
           <p>
-            <strong>Email:</strong> {user.email}
+            <strong>Email:</strong> {user.Email}
           </p>
           <p>
             <strong>Birthdate:</strong> {moment(user.birthday).format("MMMM Do, YYYY")}

@@ -3,8 +3,10 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { useNavigate } from "react-router";
 
 export const SignupView = ({ onSignedUp }) => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -28,15 +30,21 @@ export const SignupView = ({ onSignedUp }) => {
       },
       body: JSON.stringify(data),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.user) {
-          onSignedUp();
-          alert("Thank you for signing up!");
+      .then((response) => {
+        if (response.ok) {
+          return response.json(); // Parse the JSON if the response is successful
         } else {
-          setError("Sorry, your signup failed. Please check your details.");
+          throw new Error("Signup failed");
         }
       })
+      .then((data) => {
+        if (data) {
+          alert("Thank you for signing up!");
+          onSignedUp(); // Notify the parent component of signup
+          navigate("/"); // Redirect to the login page
+        }
+      })
+
       .catch(() => {
         setError("An error occurred. Please try again later.");
       });
