@@ -5,11 +5,12 @@ import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
 import { ProfileView } from "../profile-view/profile-view";
-import { LogoffView } from "../logoff-view/logoff-view"; // Import LogoffView
+import { LogoffView } from "../logoff-view/logoff-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
 
 export const MainView = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -17,6 +18,7 @@ export const MainView = () => {
   const [user, setUser] = useState(storedUser ? storedUser : null);
   const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // State to store the filter input
 
   useEffect(() => {
     if (token) {
@@ -44,15 +46,27 @@ export const MainView = () => {
     localStorage.removeItem("token");
   };
 
-  // Add to favorites handler
-  const handleAddFavorite = (movieId) => {
-    // Add logic to add the movie to favorites
-  };
+  // Filter movies based on the search query
+  const filteredMovies = movies.filter((movie) => movie.Title.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <Router>
       <NavigationBar />
       <Container>
+        {/* Search Bar */}
+        <Row className="justify-content-center mb-4">
+          <Col xs={12} sm={8} md={6} lang="{4}">
+            <Form>
+              <Form.Control
+                type="text"
+                placeholder="Search for movies by title"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} // Update the search query
+              />
+            </Form>
+          </Col>
+        </Row>
+
         <Routes>
           <Route path="/" element={user ? <Navigate to="/movies" /> : <Navigate to="/login" />} />
           <Route
@@ -85,13 +99,13 @@ export const MainView = () => {
               )
             }
           />
-
           <Route
             path="/movies"
             element={
               user ? (
                 <Row>
-                  {movies.map((movie) => (
+                  {/* Render the filtered movies */}
+                  {filteredMovies.map((movie) => (
                     <Col key={movie._id} xs={12} sm={6} md={4} lg={3} className="mb-4">
                       <MovieCard movie={movie} />
                     </Col>
@@ -102,14 +116,8 @@ export const MainView = () => {
               )
             }
           />
-          {/* Updated Route */}
-          <Route
-            path="/movies/:movieId"
-            element={user ? <MovieView movies={movies} onAddFavorite={handleAddFavorite} /> : <Navigate to="/login" />}
-          />
+          <Route path="/movies/:movieId" element={user ? <MovieView movies={movies} /> : <Navigate to="/login" />} />
           <Route path="/profile" element={user ? <ProfileView user={user} /> : <Navigate to="/login" />} />
-
-          {/* Logoff Route */}
           <Route path="/logoff" element={<LogoffView onLogoff={handleLogoff} />} />
         </Routes>
       </Container>
