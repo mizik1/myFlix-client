@@ -46,7 +46,7 @@ export const MovieView = ({ movies, onAddFavorite }) => {
           Back
         </Link>
         <Button variant="primary" onClick={() => onAddFavorite(movie._id)} className="ms-3">
-          Add to favorites
+          Add to my favorites
         </Button>
       </Col>
     </Row>

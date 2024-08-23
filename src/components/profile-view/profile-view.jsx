@@ -11,7 +11,8 @@ export const ProfileView = ({ user, favoriteMovie }) => {
 
   useEffect(() => {
     console.log("User data:", user);
-  }, [user]);
+    console.log("Favorite Movies:", favoriteMovie);
+  }, [user, favoriteMovie]);
 
   return (
     <Container>
@@ -30,7 +31,7 @@ export const ProfileView = ({ user, favoriteMovie }) => {
           <p>
             <strong>Favorite Movies:</strong>
             {favoriteMovie && favoriteMovie.length > 0 ? (
-              <ul>
+              <ul className="list-unstyled">
                 {favoriteMovie.map((movie) => (
                   <li key={movie._id}>{movie.Title}</li>
                 ))}

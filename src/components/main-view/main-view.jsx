@@ -19,24 +19,29 @@ export const MainView = () => {
   const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // State to store the filter input
+  const [favoriteMovies, setFavoriteMovies] = useState([]);
 
   useEffect(() => {
     if (token) {
+      // Fetch all movies
       fetch("https://great-movies-flix-ecc6317feb54.herokuapp.com/movies", {
         headers: { Authorization: `Bearer ${token}` },
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to fetch movies");
+        .then((response) => response.json())
+        .then((data) => {
+          setMovies(data);
+
+          // Find user's favorite movies
+          if (user.FavoriteMovies && user.FavoriteMovies.length > 0) {
+            const favoriteMoviesList = data.filter((movie) => user.FavoriteMovies.includes(movie._id));
+            setFavoriteMovies(favoriteMoviesList);
           }
-          return response.json();
         })
-        .then((data) => setMovies(data))
         .catch((error) => {
           console.error("Error fetching movies:", error);
         });
     }
-  }, [token]);
+  }, [token, user]);
 
   // Logoff handler
   const handleLogoff = () => {
@@ -44,6 +49,32 @@ export const MainView = () => {
     setToken(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+  };
+
+  // Add to favorites handler
+  const handleAddFavorite = (movieId) => {
+    // Add logic to add the movie to the user's favorites
+    console.log(`Add movie with ID ${movieId} to favorites`);
+
+    fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/${user._id}/favorites/${movieId}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to add movie to favorites");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        alert("Movie added to favorites!");
+      })
+      .catch((error) => {
+        console.error("Error adding movie to favorites:", error);
+      });
   };
 
   // Filter movies based on the search query
@@ -116,6 +147,15 @@ export const MainView = () => {
               )
             }
           />
+          <Route
+            path="/movies/:movieId"
+            element={user ? <MovieView movies={movies} onAddFavorite={handleAddFavorite} /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/profile"
+            element={user ? <ProfileView user={user} favoriteMovie={favoriteMovies} /> : <Navigate to="/login" />}
+          />
+
           <Route path="/movies/:movieId" element={user ? <MovieView movies={movies} /> : <Navigate to="/login" />} />
           <Route path="/profile" element={user ? <ProfileView user={user} /> : <Navigate to="/login" />} />
           <Route path="/logoff" element={<LogoffView onLogoff={handleLogoff} />} />
