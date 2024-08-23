@@ -1,3 +1,9 @@
+Project description: This is the client side React app that connects to the 'movie_api' that I also created. It allows a user to browse a database of movies with images. Users can also choose favorite movies from the selection of movies and see their choices.
+
+How to get the project running
+Project dependencies (e.g., JavaScript version, ESLint rules)
+Which API the project uses
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

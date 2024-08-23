@@ -17,6 +17,9 @@ export const NavigationBar = () => {
           <Nav.Link as={Link} to="/profile">
             Profile
           </Nav.Link>
+          <Nav.Link as={Link} to="/add-favorite">
+            Add Movie
+          </Nav.Link>
           <Nav.Link as={Link} to="/login">
             Login
           </Nav.Link>

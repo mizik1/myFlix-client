@@ -7,6 +7,7 @@ import { SignupView } from "../signup-view/signup-view";
 import { ProfileView } from "../profile-view/profile-view";
 import { LogoffView } from "../logoff-view/logoff-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
+import { AddFavoriteView } from "../add-favorite-view/add-favorite-view"; // Import AddFavoriteView
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -159,6 +160,10 @@ export const MainView = () => {
           <Route path="/movies/:movieId" element={user ? <MovieView movies={movies} /> : <Navigate to="/login" />} />
           <Route path="/profile" element={user ? <ProfileView user={user} /> : <Navigate to="/login" />} />
           <Route path="/logoff" element={<LogoffView onLogoff={handleLogoff} />} />
+          <Route
+            path="/add-favorite"
+            element={user ? <AddFavoriteView movies={movies} onAddFavorite={handleAddFavorite} /> : <Navigate to="/login" />}
+          />
         </Routes>
       </Container>
     </Router>
