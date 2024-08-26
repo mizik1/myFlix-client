@@ -54,9 +54,6 @@ export const MainView = () => {
 
   // Add to favorites handler
   const handleAddFavorite = (movieId) => {
-    // Add logic to add the movie to the user's favorites
-    console.log(`Add movie with ID ${movieId} to favorites`);
-
     fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/${user._id}/favorites/${movieId}`, {
       method: "POST",
       headers: {
@@ -85,20 +82,6 @@ export const MainView = () => {
     <Router>
       <NavigationBar />
       <Container>
-        {/* Search Bar */}
-        <Row className="justify-content-center mb-4">
-          <Col xs={12} sm={8} md={6} lang="{4}">
-            <Form>
-              <Form.Control
-                type="text"
-                placeholder="Search for movies by title"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)} // Update the search query
-              />
-            </Form>
-          </Col>
-        </Row>
-
         <Routes>
           <Route path="/" element={user ? <Navigate to="/movies" /> : <Navigate to="/login" />} />
           <Route
@@ -135,14 +118,30 @@ export const MainView = () => {
             path="/movies"
             element={
               user ? (
-                <Row>
-                  {/* Render the filtered movies */}
-                  {filteredMovies.map((movie) => (
-                    <Col key={movie._id} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                      <MovieCard movie={movie} />
+                <>
+                  {/* Search Bar */}
+                  <Row className="justify-content-center mb-4">
+                    <Col xs={12} sm={8} md={6}>
+                      <Form>
+                        <Form.Control
+                          type="text"
+                          placeholder="Search for movies by title"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                      </Form>
                     </Col>
-                  ))}
-                </Row>
+                  </Row>
+
+                  {/* Render the filtered movies */}
+                  <Row>
+                    {filteredMovies.map((movie) => (
+                      <Col key={movie._id} xs={12} sm={6} md={4} lg={3} className="mb-4">
+                        <MovieCard movie={movie} />
+                      </Col>
+                    ))}
+                  </Row>
+                </>
               ) : (
                 <Navigate to="/login" />
               )
@@ -156,9 +155,6 @@ export const MainView = () => {
             path="/profile"
             element={user ? <ProfileView user={user} favoriteMovie={favoriteMovies} /> : <Navigate to="/login" />}
           />
-
-          <Route path="/movies/:movieId" element={user ? <MovieView movies={movies} /> : <Navigate to="/login" />} />
-          <Route path="/profile" element={user ? <ProfileView user={user} /> : <Navigate to="/login" />} />
           <Route path="/logoff" element={<LogoffView onLogoff={handleLogoff} />} />
           <Route
             path="/add-favorite"
