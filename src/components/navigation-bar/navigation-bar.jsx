@@ -14,7 +14,6 @@ export const NavigationBar = ({ user }) => {
           <Nav.Link as={Link} to="/movies">
             Movies
           </Nav.Link>
-<<<<<<< Updated upstream
           <Nav.Link as={Link} to="/profile">
             Profile
           </Nav.Link>
@@ -32,32 +31,6 @@ export const NavigationBar = ({ user }) => {
             </Nav.Link>
           )}{" "}
           {/* Logoff link shown only when user is logged in */}
-=======
-          {user && (
-            <>
-              <Nav.Link as={Link} to="/profile">
-                Profile
-              </Nav.Link>
-              <Nav.Link as={Link} to="/add-favorite">
-                Add Movie
-              </Nav.Link>
-              <Nav.Link as={Link} to="/logoff">
-                Logoff
-              </Nav.Link>{" "}
-              {/* Logoff link shown only when user is logged in */}
-            </>
-          )}
-          {!user && (
-            <>
-              <Nav.Link as={Link} to="/login">
-                Login
-              </Nav.Link>
-              <Nav.Link as={Link} to="/signup">
-                Signup
-              </Nav.Link>
-            </>
-          )}
->>>>>>> Stashed changes
         </Nav>
       </Navbar.Collapse>
     </Navbar>

@@ -52,6 +52,29 @@ export const MainView = () => {
     localStorage.removeItem("token");
   };
 
+  // Add to favorites handler
+  const handleAddFavorite = (movieId) => {
+    fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/${user._id}/favorites/${movieId}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to add movie to favorites");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        alert("Movie added to favorites!");
+      })
+      .catch((error) => {
+        console.error("Error adding movie to favorites:", error);
+      });
+  };
+
   // Filter movies based on the search query
   const filteredMovies = movies.filter((movie) => movie.Title.toLowerCase().includes(searchQuery.toLowerCase()));
 
