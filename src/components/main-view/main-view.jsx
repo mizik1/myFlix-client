@@ -80,7 +80,7 @@ export const MainView = () => {
 
   return (
     <Router>
-      <NavigationBar />
+      <NavigationBar user={user} />
       <Container>
         <Routes>
           <Route path="/" element={user ? <Navigate to="/movies" /> : <Navigate to="/login" />} />
