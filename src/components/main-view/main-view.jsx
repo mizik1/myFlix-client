@@ -67,7 +67,16 @@ export const MainView = () => {
         }
         return response.json();
       })
-      .then((data) => {
+      .then(() => {
+        // Fetch updated user data after adding to favorites
+        fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/${user._id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+          .then((response) => response.json())
+          .then((updatedUser) => {
+            // Update the user state with the latest user data
+            setUser(updatedUser);
+          });
         alert("Movie added to favorites!");
       })
       .catch((error) => {
