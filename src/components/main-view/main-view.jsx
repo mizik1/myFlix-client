@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { MovieCard } from "../moviecard-view/moviecard-view";
 import { MovieView } from "../movie-view/movie-view";
@@ -22,31 +22,31 @@ export const MainView = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [favoriteMovies, setFavoriteMovies] = useState([]);
 
-  useEffect(() => {
-    if (token) {
-      // Fetch all movies
-      fetch("https://great-movies-flix-ecc6317feb54.herokuapp.com/movies", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Sort movies by title in ascending order
-          const sortedMovies = data.sort((a, b) => a.Title.localeCompare(b.Title));
-          setMovies(sortedMovies);
+  const fetchMovies = useCallback(() => {
+    fetch("https://great-movies-flix-ecc6317feb54.herokuapp.com/movies", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const sortedMovies = data.sort((a, b) => a.Title.localeCompare(b.Title));
+        setMovies(sortedMovies);
 
-          // Find user's favorite movies
-          if (user.FavoriteMovies && user.FavoriteMovies.length > 0) {
-            const favoriteMoviesList = sortedMovies.filter((movie) => user.FavoriteMovies.includes(movie._id));
-            setFavoriteMovies(favoriteMoviesList);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching movies:", error);
-        });
-    }
+        if (user.FavoriteMovies && user.FavoriteMovies.length > 0) {
+          const favoriteMoviesList = sortedMovies.filter((movie) => user.FavoriteMovies.includes(movie._id));
+          setFavoriteMovies(favoriteMoviesList);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching movies:", error);
+      });
   }, [token, user]);
 
-  // Logoff handler
+  useEffect(() => {
+    if (token) {
+      fetchMovies();
+    }
+  }, [token, user, fetchMovies]);
+
   const handleLogoff = () => {
     setUser(null);
     setToken(null);
@@ -54,7 +54,6 @@ export const MainView = () => {
     localStorage.removeItem("token");
   };
 
-  // Add to favorites handler
   const handleAddFavorite = (movieId) => {
     fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/${user._id}/favorites/${movieId}`, {
       method: "POST",
@@ -70,15 +69,8 @@ export const MainView = () => {
         return response.json();
       })
       .then(() => {
-        // Fetch updated user data after adding to favorites
-        fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/name/${user.Username}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-          .then((response) => response.json())
-          .then((updatedUser) => {
-            // Update the user state with the latest user data
-            setUser(updatedUser);
-          });
+        fetchMovies(); // Refresh movies after adding to favorites
+        fetchUpdatedUserData(); // Refresh user data after adding to favorites
         alert("Movie added to favorites!");
       })
       .catch((error) => {
@@ -86,7 +78,18 @@ export const MainView = () => {
       });
   };
 
-  // Remove from favorites handler
+  const fetchUpdatedUserData = () => {
+    fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/name/${user.Username}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((response) => response.json())
+      .then((updatedUser) => {
+        setUser(updatedUser);
+      })
+      .catch((error) => {
+        console.error("Error fetching updated user data:", error);
+      });
+  };
 
   const handleRemoveFavorite = (movieId) => {
     fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/${user._id}/favorites/${movieId}`, {
@@ -103,15 +106,8 @@ export const MainView = () => {
         return response.json();
       })
       .then(() => {
-        // Fetch updated user data after removing from favorites
-        fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/name/${user.Username}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-          .then((response) => response.json())
-          .then((updatedUser) => {
-            // Update the user state with the latest user data
-            setUser(updatedUser);
-          });
+        fetchMovies(); // Refresh movies after removing from favorites
+        fetchUpdatedUserData(); // Refresh user data after removing from favorites
         alert("Movie removed from favorites!");
       })
       .catch((error) => {
@@ -119,7 +115,6 @@ export const MainView = () => {
       });
   };
 
-  // Filter movies based on the search query
   const filteredMovies = movies.filter((movie) => movie.Title.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
@@ -163,7 +158,6 @@ export const MainView = () => {
             element={
               user ? (
                 <>
-                  {/* Search Bar */}
                   <Row className="justify-content-center mb-4">
                     <Col xs={12} sm={8} md={6}>
                       <Form>
@@ -177,7 +171,6 @@ export const MainView = () => {
                     </Col>
                   </Row>
 
-                  {/* Render the filtered movies */}
                   <Row>
                     {filteredMovies.map((movie) => (
                       <Col key={movie._id} xs={12} sm={6} md={4} lg={3} className="mb-4">
@@ -199,23 +192,18 @@ export const MainView = () => {
             path="/profile"
             element={
               user ? (
-                <ProfileView
-                  user={user}
-                  favoriteMovie={favoriteMovies}
-                  onRemoveFavorite={handleRemoveFavorite} // Pass the function as a prop
-                />
+                <ProfileView user={user} favoriteMovie={favoriteMovies} onRemoveFavorite={handleRemoveFavorite} />
               ) : (
                 <Navigate to="/login" />
               )
             }
           />
-
           <Route path="/logoff" element={<LogoffView onLogoff={handleLogoff} />} />
           <Route
             path="/add-favorite"
             element={
               user ? (
-                <AddFavoriteView movies={movies} token={token} onAddFavorite={handleAddFavorite} />
+                <AddFavoriteView movies={movies} token={token} onAddFavorite={handleAddFavorite} fetchMovies={fetchMovies} />
               ) : (
                 <Navigate to="/login" />
               )
