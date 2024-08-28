@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
 export const AddFavoriteView = ({ onAddFavorite, token }) => {
-  // Accept token as a prop
   const [movieData, setMovieData] = useState({
     Title: "",
     Description: "",
     Genre: "",
     DirectorName: "",
+    DirectorBio: "",
+    DirectorBirthDate: "",
     imageURL: "",
   });
 
@@ -19,12 +20,11 @@ export const AddFavoriteView = ({ onAddFavorite, token }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Send the data to the backend
-    fetch("https://your-api-endpoint.com/movies", {
+    fetch("https://great-movies-flix-ecc6317feb54.herokuapp.com/movies", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Use the token from props
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         Title: movieData.Title,
@@ -32,21 +32,31 @@ export const AddFavoriteView = ({ onAddFavorite, token }) => {
         Genre: movieData.Genre,
         Director: {
           Name: movieData.DirectorName,
+          Bio: movieData.DirectorBio,
+          BirthDate: movieData.DirectorBirthDate,
         },
         imageURL: movieData.imageURL,
-        Featured: false, // Default to false
+        Featured: false,
       }),
     })
       .then((response) => {
+        console.log("Response:", response);
         if (response.ok) {
-          alert("Movie added successfully!");
-          onAddFavorite(); // Call any necessary handler to refresh or update the UI
+          return response.json();
         } else {
-          throw new Error("Failed to add movie");
+          throw new Error(`Failed to add movie: ${response.statusText}`);
+        }
+      })
+      .then((data) => {
+        console.log("Movie added:", data);
+        alert("Movie added successfully!");
+        if (onAddFavorite) {
+          onAddFavorite(); // Update UI after adding movie
         }
       })
       .catch((error) => {
         console.error("Error adding movie:", error);
+        alert(`Error adding movie: ${error.message}`);
       });
   };
 
@@ -101,6 +111,30 @@ export const AddFavoriteView = ({ onAddFavorite, token }) => {
                 value={movieData.DirectorName}
                 onChange={handleInputChange}
                 placeholder="Enter director's name"
+                required
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formDirectorBio">
+              <Form.Label>Director Bio</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={2}
+                name="DirectorBio"
+                value={movieData.DirectorBio}
+                onChange={handleInputChange}
+                placeholder="Enter director's bio"
+                required
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formDirectorBirthDate">
+              <Form.Label>Director Birth Date</Form.Label>
+              <Form.Control
+                type="date"
+                name="DirectorBirthDate"
+                value={movieData.DirectorBirthDate}
+                onChange={handleInputChange}
                 required
               />
             </Form.Group>

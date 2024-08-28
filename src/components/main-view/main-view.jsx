@@ -7,7 +7,7 @@ import { SignupView } from "../signup-view/signup-view";
 import { ProfileView } from "../profile-view/profile-view";
 import { LogoffView } from "../logoff-view/logoff-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
-import { AddFavoriteView } from "../add-favorite-view/add-favorite-view"; // Import AddFavoriteView
+import { AddFavoriteView } from "../add-favorite-view/add-favorite-view";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -19,7 +19,7 @@ export const MainView = () => {
   const [user, setUser] = useState(storedUser ? storedUser : null);
   const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(""); // State to store the filter input
+  const [searchQuery, setSearchQuery] = useState("");
   const [favoriteMovies, setFavoriteMovies] = useState([]);
 
   useEffect(() => {
@@ -81,6 +81,39 @@ export const MainView = () => {
       })
       .catch((error) => {
         console.error("Error adding movie to favorites:", error);
+      });
+  };
+
+  // Remove from favorites handler
+
+  const handleRemoveFavorite = (movieId) => {
+    fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/${user._id}/favorites/${movieId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to remove movie from favorites");
+        }
+        return response.json();
+      })
+      .then(() => {
+        // Fetch updated user data after removing from favorites
+        fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/name/${user.Username}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+          .then((response) => response.json())
+          .then((updatedUser) => {
+            // Update the user state with the latest user data
+            setUser(updatedUser);
+          });
+        alert("Movie removed from favorites!");
+      })
+      .catch((error) => {
+        console.error("Error removing movie from favorites:", error);
       });
   };
 
@@ -162,8 +195,19 @@ export const MainView = () => {
           />
           <Route
             path="/profile"
-            element={user ? <ProfileView user={user} favoriteMovie={favoriteMovies} /> : <Navigate to="/login" />}
+            element={
+              user ? (
+                <ProfileView
+                  user={user}
+                  favoriteMovie={favoriteMovies}
+                  onRemoveFavorite={handleRemoveFavorite} // Pass the function as a prop
+                />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
+
           <Route path="/logoff" element={<LogoffView onLogoff={handleLogoff} />} />
           <Route
             path="/add-favorite"
