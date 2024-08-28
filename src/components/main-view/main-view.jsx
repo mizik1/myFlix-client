@@ -30,11 +30,13 @@ export const MainView = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          setMovies(data);
+          // Sort movies by title in ascending order
+          const sortedMovies = data.sort((a, b) => a.Title.localeCompare(b.Title));
+          setMovies(sortedMovies);
 
           // Find user's favorite movies
           if (user.FavoriteMovies && user.FavoriteMovies.length > 0) {
-            const favoriteMoviesList = data.filter((movie) => user.FavoriteMovies.includes(movie._id));
+            const favoriteMoviesList = sortedMovies.filter((movie) => user.FavoriteMovies.includes(movie._id));
             setFavoriteMovies(favoriteMoviesList);
           }
         })
