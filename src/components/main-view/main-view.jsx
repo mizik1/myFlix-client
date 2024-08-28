@@ -213,7 +213,13 @@ export const MainView = () => {
           <Route path="/logoff" element={<LogoffView onLogoff={handleLogoff} />} />
           <Route
             path="/add-favorite"
-            element={user ? <AddFavoriteView movies={movies} onAddFavorite={handleAddFavorite} /> : <Navigate to="/login" />}
+            element={
+              user ? (
+                <AddFavoriteView movies={movies} token={token} onAddFavorite={handleAddFavorite} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
         </Routes>
       </Container>
