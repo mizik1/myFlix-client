@@ -69,7 +69,7 @@ export const MainView = () => {
       })
       .then(() => {
         // Fetch updated user data after adding to favorites
-        fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/${user._id}`, {
+        fetch(`https://great-movies-flix-ecc6317feb54.herokuapp.com/users/name/${user.Username}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
           .then((response) => response.json())
