@@ -203,7 +203,10 @@ export const MainView = () => {
             path="/add-favorite"
             element={
               user ? (
-                <AddFavoriteView movies={movies} token={token} onAddFavorite={handleAddFavorite} fetchMovies={fetchMovies} />
+                <AddFavoriteView
+                  token={token}
+                  onAddFavorite={(movie) => setMovies([...movies, movie])} // Update the movie list with the newly added movie. Uses ... (spread operator)
+                />
               ) : (
                 <Navigate to="/login" />
               )

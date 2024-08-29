@@ -51,7 +51,7 @@ export const AddFavoriteView = ({ onAddFavorite, token }) => {
         console.log("Movie added:", data);
         alert("Movie added successfully!");
         if (onAddFavorite) {
-          onAddFavorite(); // Update UI after adding movie
+          onAddFavorite(data); // Update UI after adding movie
         }
       })
       .catch((error) => {
